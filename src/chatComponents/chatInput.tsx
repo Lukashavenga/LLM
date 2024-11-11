@@ -1,33 +1,31 @@
 import React from 'react';
-import { Textarea } from "@nextui-org/react";
+import { Input } from 'antd';
+import './chatComponent.styles.css';
+
 
 interface ChatInputProps {
-    value: string;
-    onChange: (value: string) => void;
-    onSubmit: () => void;
+  handleUserInput: (val: string) => void;
 }
 
-export const ChatInput = ({
-    value, onChange, onSubmit,
-}: ChatInputProps) => {
-    const handleKeyPress = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            onSubmit();
-        }
-    };
+const ChatInput: React.FC<ChatInputProps> = ({ handleUserInput }) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleUserInput((e.target as HTMLTextAreaElement).value);
+    }
+  };
 
-    return (
-        <div className="w-full">
-            <Textarea
-                minRows={1}
-                maxRows={4}
-                value={value}
-                label="User Input"
-                className="textInput"
-                onValueChange={onChange}
-                placeholder="Want to know the answer to life, the universe, and everything?"
-            />
-        </div>
-    );
+  return (
+    <div className="textInputWrapper">
+      <Input
+        rows={1}
+        autoSize={{ minRows: 1, maxRows: 4 }}
+        placeholder="Want to know the answer to life, the universe, and everything?"
+        onKeyDown={handleKeyPress}
+        className="textInput"
+      />
+    </div>
+  );
 };
+
+export default ChatInput;

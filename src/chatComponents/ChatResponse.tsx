@@ -1,88 +1,56 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
-import { Spinner, Card, CardBody, ScrollShadow } from '@nextui-org/react';
+import { Card } from 'antd';
+import ReactMarkdown from 'react-markdown';
 import { fetchChatStreamResponse } from '../queries/queries';
 import type { ChatResponse } from '../queries/interfaces';
+import { parseMarkdown } from './chatComponents.util';
+import './chatComponent.styles.css';
 
 const ChatResponse = ({ userInput }: { userInput: string }) => {
-    const queryClient = useQueryClient();
-    const [messages, setMessages] = useState<string[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const scrollRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
+  const [messages, setMessages] = useState<string[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-    const handleStream = (data: ChatResponse) => {
-        if (data.status === 'data' && typeof data.data === 'string') {
-            setMessages(prev => [...prev, data.data as string]);
-        }
-    };
-
-    const handleError = (err: Error) => {
-        setError(err.message);
-    };
-
-    const handleComplete = () => {
-        queryClient.invalidateQueries(['chatStream', { userInput }]);
-    };
-
-    useQuery({
-        queryKey: ['chatStream', { userInput }],
-        queryFn: () => new Promise<void>((resolve, reject) => {
-            fetchChatStreamResponse({
-                handleStream,
-                handleError: (err) => {
-                    handleError(err);
-                    reject(err);
-                },
-                handleComplete: () => {
-                    handleComplete();
-                    resolve();
-                }
-            });
-        }),
-        enabled: !!userInput,
-        onError: handleError
-    });
-
-    useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [messages]);
-
-    if (error) {
-        return (
-            <Card>
-                <CardBody>
-                    <p className="text-danger">{error}</p>
-                </CardBody>
-            </Card>
-        );
+  const handleStream = (data: ChatResponse) => {
+    if (data.status === 'data' && typeof data.data === 'string') {
+      setMessages(prev => [...prev, parseMarkdown(data.data as string)]);
     }
+  };
 
-    if (messages.length === 0) {
-        return (
-            <Card>
-                <CardBody>
-                    <Spinner label="Loading chat response..." color="primary" />
-                </CardBody>
-            </Card>
-        );
+  const handleComplete = () => {
+    queryClient.invalidateQueries(['chatStream', { userInput }]);
+  };
+
+  useQuery({
+    queryKey: ['chatStream', { userInput }],
+    queryFn: () => new Promise<void>((resolve, reject) => {
+      fetchChatStreamResponse({
+        handleStream,
+        handleError: reject,
+        handleComplete: resolve
+      });
+    }),
+    enabled: !!userInput,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+  }, [messages]);
 
-    return (
-        <Card>
-            <CardBody>
-                <ScrollShadow>
-                    {messages.map((message, index) => (
-                        <p key={index}>
-                            {message}
-                        </p>
-                    ))}
-                    <div ref={scrollRef} />
-                </ScrollShadow>
-            </CardBody>
-        </Card>
-    );
+  return (
+    <Card className="chatResponse">
+      {messages.map((message, index) => (
+        <ReactMarkdown key={index}>
+          {message}
+        </ReactMarkdown>
+      ))}
+      <div ref={scrollRef} />
+    </Card>
+  );
 };
 
 export default ChatResponse;
