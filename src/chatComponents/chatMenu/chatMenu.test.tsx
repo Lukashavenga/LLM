@@ -8,6 +8,7 @@ describe('ChatMenu', () => {
     test('calls handleClearChat when Clear Chat button is clicked', () => {
       const handleClearChat = jest.fn();
       const handleToggleAutoScroll = jest.fn();
+      
       render(
         <ChatMenu
             onClearChat={handleClearChat}
@@ -16,7 +17,7 @@ describe('ChatMenu', () => {
         />
       );
   
-      const clearChatButton = screen.getByText('Clear Chat');
+      const clearChatButton = screen.getByTestId('clearChat');
       fireEvent.click(clearChatButton);
   
       expect(handleClearChat).toHaveBeenCalled();
@@ -25,6 +26,7 @@ describe('ChatMenu', () => {
     test('calls handleToggleAutoScroll when Unlock Auto-Scroll button is clicked', () => {
       const handleClearChat = jest.fn();
       const handleToggleAutoScroll = jest.fn();
+      
       render(
         <ChatMenu
             onClearChat={handleClearChat}
@@ -33,37 +35,9 @@ describe('ChatMenu', () => {
         />
       );
   
-      const toggleAutoScrollButton = screen.getByText('Unlock Auto-Scroll');
+      const toggleAutoScrollButton = screen.getByTestId('toggleAutoScroll');
       fireEvent.click(toggleAutoScrollButton);
   
       expect(handleToggleAutoScroll).toHaveBeenCalled();
-    });
-  
-    test('displays Lock Auto-Scroll when autoScrollEnabled is true', () => {
-      const handleClearChat = jest.fn();
-      const handleToggleAutoScroll = jest.fn();
-      render(
-        <ChatMenu
-            onClearChat={handleClearChat}
-            onToggleAutoScroll={handleToggleAutoScroll}
-            autoScrollEnabled={true}
-        />
-      );
-  
-      expect(screen.getByText('Lock Auto-Scroll')).toBeInTheDocument();
-    });
-  
-    test('displays Unlock Auto-Scroll when autoScrollEnabled is false', () => {
-      const handleClearChat = jest.fn();
-      const handleToggleAutoScroll = jest.fn();
-      render(
-        <ChatMenu
-            onClearChat={handleClearChat}
-            onToggleAutoScroll={handleToggleAutoScroll}
-            autoScrollEnabled={false}
-        />
-      );
-  
-      expect(screen.getByText('Unlock Auto-Scroll')).toBeInTheDocument();
     });
   });

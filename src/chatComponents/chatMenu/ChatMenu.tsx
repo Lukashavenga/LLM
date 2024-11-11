@@ -14,12 +14,20 @@ const ChatMenu = ({ onClearChat, onToggleAutoScroll, autoScrollEnabled }: ChatMe
     <Menu mode="horizontal" className="chatMenu">
       <Row justify="space-between" style={{ width: '100%' }}>
         <Col>
-          <Menu.Item key="clearChat" onClick={onClearChat}>
+          <Menu.Item
+            key="clearChat"
+            onClick={onClearChat}
+            data-testid="clearChat"
+            >
             <ClearOutlined />
           </Menu.Item>
         </Col>
         <Col>
-          <Menu.Item key="toggleAutoScroll" onClick={onToggleAutoScroll}>
+          <Menu.Item
+            key="toggleAutoScroll"
+            onClick={onToggleAutoScroll}
+            data-testid="toggleAutoScroll"
+            >
             {autoScrollEnabled ? <LockOutlined /> : <UnlockOutlined />}
           </Menu.Item>
         </Col>

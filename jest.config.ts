@@ -1,17 +1,18 @@
-/* eslint-disable */
+import type { Config } from '@jest/types';
+import { pathsToModuleNameMapper } from 'ts-jest';
+import { compilerOptions } from './tsconfig.json';
 
-const { pathsToModuleNameMapper } = require("ts-jest");
-const { compilerOptions } = require("./tsconfig");
-
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
-  roots: ["<rootDir>"],
-  preset: "ts-jest",
-  testEnvironment: "jsdom",
+const config: Config.InitialOptions = {
+  roots: ['<rootDir>'],
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
   modulePaths: [compilerOptions.baseUrl],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths ?? {}),
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, { prefix: '<rootDir>/' }),
   transform: {
-    ".+\\.(css|less|sass|scss|png|jpg|gif|ttf|woff|woff2|svg)$":
-      "jest-transform-stub",
+    '^.+\\.tsx?$': 'babel-jest',
+    '.+\\.(css|less|sass|scss|png|jpg|gif|ttf|woff|woff2|svg)$': 'jest-transform-stub',
   },
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
 };
+
+export default config;
