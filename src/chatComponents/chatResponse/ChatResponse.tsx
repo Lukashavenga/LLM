@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { Card } from 'antd';
 import ReactMarkdown from 'react-markdown';
-import { fetchChatStreamResponse } from '../queries/queries';
-import type { ChatResponse } from '../queries/interfaces';
-import { parseMarkdown } from './chatComponents.util';
-import './chatComponent.styles.css';
+import { fetchChatStreamResponse } from '../../queries/queries';
+import type { ChatEntry, ChatResponse } from '../../queries/interfaces';
+import { parseMarkdown } from '../chatComponents.util';
+import '../chatComponents.styles.css';
 
 const ChatResponse = ({
     userInput,
@@ -14,8 +14,8 @@ const ChatResponse = ({
     autoScrollEnabled,
 }: {
     userInput: string,
-    messages: string[],
-    handleNewMessage: (message: string) => void,
+    messages: ChatEntry[],
+    handleNewMessage: (message: string, sender: 'bot' | 'user') => void,
     autoScrollEnabled: boolean,
 }) => {
   const queryClient = useQueryClient();
@@ -23,7 +23,7 @@ const ChatResponse = ({
 
   const handleStream = (data: ChatResponse) => {
     if (data.status === 'data' && typeof data.data === 'string') {
-        handleNewMessage(parseMarkdown(data.data as string));
+        handleNewMessage(parseMarkdown(data.data as string), 'bot');
     }
   };
 
@@ -53,10 +53,10 @@ const ChatResponse = ({
   return (
     <Card className="chatResponse">
       {messages.map((message, index) => (
-        <ReactMarkdown key={index}>
-          {message}
-        </ReactMarkdown>
-      ))}
+        <div key={index} className={`chatMessage ${message.sender}`}>
+            <ReactMarkdown>{message.body}</ReactMarkdown>
+        </div>
+        ))}
       <div ref={scrollRef} />
     </Card>
   );

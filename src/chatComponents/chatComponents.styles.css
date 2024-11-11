@@ -20,8 +20,8 @@
 .textInputWrapper {
   display: flex;
   padding: 10px;
-  border-radius: 8px;
   align-items: center;
+  border-radius: 8px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background-color: #202222;
@@ -47,7 +47,6 @@
   border-radius: 8px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
   background-color: #202222;
 }
 
@@ -65,10 +64,10 @@
 
 .chatMenu {
   display: flex;
-  border-radius: 8px;
-  align-items: center;
-  background-color: #202222;
   justify-content: space-between;
+  padding: 10px;
+  background-color: #202222;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.925);
 }
 
 pre {
@@ -76,11 +75,18 @@ pre {
   padding: 10px;
   color: #f8f8f2;
   overflow-x: auto;
-  border-radius: 0;
   background-color: #2d2d2d;
 }
 
-pre:nth-child(0) {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+.chatMessage.bot{
+  text-align: left;
+  border-radius: 8px;
+  background-color: #202222;
+}
+
+.chatMessage.user {
+  text-align: right;
+  color: #646cff;
+  font-weight: 500;
+  margin-bottom: 10px;
 }

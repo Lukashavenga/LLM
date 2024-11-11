@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Input, Button, Space } from 'antd';
-import './chatComponent.styles.css';
+import '../chatComponents.styles.css';
 
 const { TextArea } = Input;
 
@@ -42,6 +42,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ handleUserInput }) => {
           onFocus={() => setShowSubmit(true)}
           onBlur={() => setShowSubmit(false)}
           className="textInput"
+          data-testid="chatInput"
         />
         {showSubmit && (
           <Button
@@ -49,6 +50,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ handleUserInput }) => {
             onClick={handleSubmit}
             className="submitButton"
             size="large"
+            data-testid="submitButton"
           >
             Submit
           </Button>

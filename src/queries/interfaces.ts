@@ -9,3 +9,9 @@ export interface ChatResponse {
     data: string | null;
     message: string | null;
 }
+
+export interface ChatEntry {
+    body: string;
+    sender: 'user' | 'bot';
+    date: Date;
+}

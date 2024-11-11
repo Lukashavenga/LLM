@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, Row, Col } from 'antd';
 import { ClearOutlined, UnlockOutlined, LockOutlined } from '@ant-design/icons';
-import './chatComponent.styles.css';
+import '../chatComponents.styles.css';
 
 interface ChatMenuProps {
   onClearChat: () => void;
@@ -20,7 +20,7 @@ const ChatMenu = ({ onClearChat, onToggleAutoScroll, autoScrollEnabled }: ChatMe
         </Col>
         <Col>
           <Menu.Item key="toggleAutoScroll" onClick={onToggleAutoScroll}>
-            {autoScrollEnabled ? <UnlockOutlined /> : <LockOutlined />}
+            {autoScrollEnabled ? <LockOutlined /> : <UnlockOutlined />}
           </Menu.Item>
         </Col>
       </Row>
