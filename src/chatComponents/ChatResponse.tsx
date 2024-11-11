@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { Card } from 'antd';
 import ReactMarkdown from 'react-markdown';
@@ -7,14 +7,23 @@ import type { ChatResponse } from '../queries/interfaces';
 import { parseMarkdown } from './chatComponents.util';
 import './chatComponent.styles.css';
 
-const ChatResponse = ({ userInput }: { userInput: string }) => {
+const ChatResponse = ({
+    userInput,
+    messages,
+    handleNewMessage,
+    autoScrollEnabled,
+}: {
+    userInput: string,
+    messages: string[],
+    handleNewMessage: (message: string) => void,
+    autoScrollEnabled: boolean,
+}) => {
   const queryClient = useQueryClient();
-  const [messages, setMessages] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleStream = (data: ChatResponse) => {
     if (data.status === 'data' && typeof data.data === 'string') {
-      setMessages(prev => [...prev, parseMarkdown(data.data as string)]);
+        handleNewMessage(parseMarkdown(data.data as string));
     }
   };
 
@@ -24,11 +33,11 @@ const ChatResponse = ({ userInput }: { userInput: string }) => {
 
   useQuery({
     queryKey: ['chatStream', { userInput }],
-    queryFn: () => new Promise<void>((resolve, reject) => {
+    queryFn: () => new Promise<void>((_, reject) => {
       fetchChatStreamResponse({
         handleStream,
         handleError: reject,
-        handleComplete: resolve
+        handleComplete: handleComplete
       });
     }),
     enabled: !!userInput,
@@ -36,7 +45,7 @@ const ChatResponse = ({ userInput }: { userInput: string }) => {
   });
 
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scrollRef.current && autoScrollEnabled) {
       scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
