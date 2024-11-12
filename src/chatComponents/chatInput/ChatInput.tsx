@@ -39,8 +39,6 @@ const ChatInput= ({ handleUserInput }:ChatInputProps) => {
           className="textInput"
           data-testid="chatInput"
           onKeyDown={handleKeyPress}
-          onFocus={() => setShowSubmit(true)}
-          onBlur={() => setShowSubmit(false)}
           autoSize={{ minRows: 1, maxRows: 4 }}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Want to know the answer to life, the universe, and everything?"

@@ -3,13 +3,11 @@ import { ChatResponse } from './interfaces';
 
 interface StreamHandlers {
     handleStream: (data: ChatResponse) => void;
-    handleError: (error: Error) => void;
     handleComplete: () => void;
 }
 
 export const fetchChatStreamResponse = async ({
     handleStream,
-    handleError,
     handleComplete,
 }: StreamHandlers): Promise<void> => {
     // const encoder = new TextEncoder();
@@ -63,7 +61,6 @@ export const fetchChatStreamResponse = async ({
 
                 read().catch(error => {
                     console.error('Stream processing error:', error);
-                    handleError(new Error(error.message));
                     controller.error(error);
                 });
             }
@@ -79,6 +76,6 @@ export const fetchChatStreamResponse = async ({
         });
 
     } catch (error) {
-        handleError(new Error(error.message || 'Failed to fetch chat response'));
+        console.error(error as string);
     }
 };

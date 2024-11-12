@@ -1,13 +1,18 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import ChatResponse from './ChatResponse';
 import { ChatEntry } from '../../queries/interfaces';
 import { ConfigProvider } from 'antd';
+
+const queryClient = new QueryClient();
 
 // Mock ReactMarkdown component
 jest.mock('react-markdown', () => {
   return ({ children }: { children: string }) => <div>{children}</div>;
 });
+
+window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
 describe('ChatResponse', () => {
   const messages: ChatEntry[] = [
@@ -17,9 +22,11 @@ describe('ChatResponse', () => {
 
   const customRender = (ui: React.ReactElement) => {
     return render(
-      <ConfigProvider>
-        {ui}
-      </ConfigProvider>
+      <QueryClientProvider client={queryClient}>
+        <ConfigProvider>
+          {ui}
+        </ConfigProvider>
+      </QueryClientProvider>
     );
   };
 

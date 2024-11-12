@@ -40,7 +40,6 @@ const ChatResponse = ({
     queryFn: () => new Promise<void>((_, reject) => {
       fetchChatStreamResponse({
         handleStream,
-        handleError: reject,
         handleComplete: handleComplete
       });
     }),
@@ -53,7 +52,7 @@ const ChatResponse = ({
     if (scrollRef.current && autoScrollEnabled) {
       scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, autoScrollEnabled]);
 
   return (
     <Card className="chatResponse">
