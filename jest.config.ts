@@ -7,11 +7,18 @@ const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   modulePaths: [compilerOptions.baseUrl],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths || {}, { prefix: '<rootDir>/' }),
+  moduleNameMapper: {
+    ...pathsToModuleNameMapper(compilerOptions.paths || {}, { prefix: '<rootDir>/' }),
+    '^react-markdown$': '<rootDir>/node_modules/react-markdown/index.js'
+  },
   transform: {
-    '^.+\\.tsx?$': 'babel-jest',
+    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.jsx?$': 'babel-jest',
     '.+\\.(css|less|sass|scss|png|jpg|gif|ttf|woff|woff2|svg)$': 'jest-transform-stub',
   },
+  transformIgnorePatterns: [
+    '/node_modules/(?!(react-markdown)/)',
+  ],
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
 };
 

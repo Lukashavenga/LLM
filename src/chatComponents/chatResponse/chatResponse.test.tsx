@@ -2,6 +2,12 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ChatResponse from './ChatResponse';
 import { ChatEntry } from '../../queries/interfaces';
+import { ConfigProvider } from 'antd';
+
+// Mock ReactMarkdown component
+jest.mock('react-markdown', () => {
+  return ({ children }: { children: string }) => <div>{children}</div>;
+});
 
 describe('ChatResponse', () => {
   const messages: ChatEntry[] = [
@@ -9,8 +15,16 @@ describe('ChatResponse', () => {
     { body: 'Server response', sender: 'bot', date: new Date() },
   ];
 
+  const customRender = (ui: React.ReactElement) => {
+    return render(
+      <ConfigProvider>
+        {ui}
+      </ConfigProvider>
+    );
+  };
+
   test('renders messages correctly', () => {
-    render(
+    customRender(
       <ChatResponse
         userInput=""
         messages={messages}

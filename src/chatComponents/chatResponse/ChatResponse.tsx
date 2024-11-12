@@ -7,23 +7,27 @@ import type { ChatEntry, ChatResponse } from '../../queries/interfaces';
 import { parseMarkdown } from '../chatComponents.util';
 import '../chatComponents.styles.css';
 
+interface ChatResponseProps {
+  userInput: string;
+  messages: ChatEntry[];
+  autoScrollEnabled: boolean;
+  handleNewMessage: (message: string, sender: 'bot' | 'user') => void;
+}
+
 const ChatResponse = ({
-    userInput,
-    messages,
-    handleNewMessage,
-    autoScrollEnabled,
-}: {
-    userInput: string,
-    messages: ChatEntry[],
-    handleNewMessage: (message: string, sender: 'bot' | 'user') => void,
-    autoScrollEnabled: boolean,
-}) => {
-  const queryClient = useQueryClient();
+  userInput, messages,
+  autoScrollEnabled,
+  handleNewMessage,
+}: ChatResponseProps) => {
+  
+    const queryClient = useQueryClient();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleStream = (data: ChatResponse) => {
     if (data.status === 'data' && typeof data.data === 'string') {
-        handleNewMessage(parseMarkdown(data.data as string), 'bot');
+      // Parse markdown and send to parent
+      const parsedMessage = parseMarkdown(data.data);
+      handleNewMessage(parsedMessage, 'bot');
     }
   };
 
@@ -45,6 +49,7 @@ const ChatResponse = ({
   });
 
   useEffect(() => {
+    // Scroll to bottom of chat on new message unless auto scroll is disabled by menu icon click
     if (scrollRef.current && autoScrollEnabled) {
       scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }

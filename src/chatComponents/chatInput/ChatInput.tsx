@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,KeyboardEvent } from 'react';
 import { Input, Button, Space } from 'antd';
 import '../chatComponents.styles.css';
 
@@ -8,21 +8,23 @@ interface ChatInputProps {
   handleUserInput: (val: string) => void;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ handleUserInput }) => {
+const ChatInput= ({ handleUserInput }:ChatInputProps) => {
+
   const [inputValue, setInputValue] = useState<string>('');
   const [showSubmit, setShowSubmit] = useState<boolean>(false);
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleUserInput(inputValue);
-      setInputValue('');
-    }
-  };
-
+  // Take controlled component value, sent to parent, and reset
   const handleSubmit = () => {
     handleUserInput(inputValue);
     setInputValue('');
+  };
+
+  // Allow for submit on Enter
+  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit();
+    }
   };
 
   return (
@@ -33,23 +35,22 @@ const ChatInput: React.FC<ChatInputProps> = ({ handleUserInput }) => {
     >
       <Space.Compact style={{ width: '100%' }}>
         <TextArea
-          rows={1}
-          autoSize={{ minRows: 1, maxRows: 4 }}
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Want to know the answer to life, the universe, and everything?"
+          className="textInput"
+          data-testid="chatInput"
           onKeyDown={handleKeyPress}
           onFocus={() => setShowSubmit(true)}
           onBlur={() => setShowSubmit(false)}
-          className="textInput"
-          data-testid="chatInput"
+          autoSize={{ minRows: 1, maxRows: 4 }}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="Want to know the answer to life, the universe, and everything?"
         />
         {showSubmit && (
           <Button
+            size="large"
             type="default"
             onClick={handleSubmit}
             className="submitButton"
-            size="large"
             data-testid="submitButton"
           >
             Submit

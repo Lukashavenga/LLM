@@ -1,38 +1,34 @@
 import React from 'react';
-import { Menu, Row, Col } from 'antd';
+import { Row, Col, Button } from 'antd';
 import { ClearOutlined, UnlockOutlined, LockOutlined } from '@ant-design/icons';
 import '../chatComponents.styles.css';
 
 interface ChatMenuProps {
   onClearChat: () => void;
-  onToggleAutoScroll: () => void;
   autoScrollEnabled: boolean;
+  onToggleAutoScroll: () => void;
 }
 
-const ChatMenu = ({ onClearChat, onToggleAutoScroll, autoScrollEnabled }: ChatMenuProps) => {
+const ChatMenu = ({
+  onClearChat,
+  autoScrollEnabled,
+  onToggleAutoScroll,
+}: ChatMenuProps) => {
   return (
-    <Menu mode="horizontal" className="chatMenu">
-      <Row justify="space-between" style={{ width: '100%' }}>
-        <Col>
-          <Menu.Item
-            key="clearChat"
-            onClick={onClearChat}
-            data-testid="clearChat"
-            >
-            <ClearOutlined />
-          </Menu.Item>
-        </Col>
-        <Col>
-          <Menu.Item
-            key="toggleAutoScroll"
-            onClick={onToggleAutoScroll}
-            data-testid="toggleAutoScroll"
-            >
-            {autoScrollEnabled ? <LockOutlined /> : <UnlockOutlined />}
-          </Menu.Item>
-        </Col>
-      </Row>
-    </Menu>
+    <div className="chatMenu">
+      <Button 
+        type="text"
+        onClick={onClearChat}
+        data-testid="clearChat"
+        icon={<ClearOutlined />}
+      />
+      <Button
+        type="text"
+        onClick={onToggleAutoScroll}
+        data-testid="toggleAutoScroll"
+        icon={autoScrollEnabled ? <LockOutlined /> : <UnlockOutlined />}
+      />
+    </div>
   );
 };
 
